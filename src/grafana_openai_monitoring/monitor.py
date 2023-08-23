@@ -53,9 +53,9 @@ def __calculate_cost(model, prompt_tokens, sampled_tokens):
 # Function to send logs to the specified logs URL
 def __send_logs(logs_url, logs_username, access_token, logs):
     try:
-        response = requests.post(logs_url, 
-                                 auth=(logs_username, access_token), 
-                                 json=logs, 
+        response = requests.post(logs_url,
+                                 auth=(logs_username, access_token),
+                                 json=logs,
                                  headers={"Content-Type": "application/json"}
                                 )
         response.raise_for_status()  # Raise an exception for non-2xx status codes
@@ -71,7 +71,7 @@ def __send_metrics(metrics_url, metrics_username, access_token, metrics):
         response.raise_for_status()  # Raise an exception for non-2xx status codes
         return response
     except requests.exceptions.RequestException as err:
-        raise requests.exceptions.RequestException(f"Error sending Metrics: {err}") 
+        raise requests.exceptions.RequestException(f"Error sending Metrics: {err}")
 
 # Decorator function to monitor chat completion
 def chat_v2(func, metrics_url, logs_url, metrics_username, logs_username, access_token):
@@ -116,16 +116,16 @@ def chat_v2(func, metrics_url, logs_url, metrics_username, logs_username, access
         metrics = [
             # Metric to track the number of completion tokens used in the response
             f'openai,integration=openai,source=python,model={response.model} completionTokens={response.usage.completion_tokens}',
-            
+
             # Metric to track the number of prompt tokens used in the response
             f'openai,integration=openai,source=python,model={response.model} promptTokens={response.usage.prompt_tokens}',
-            
+
             # Metric to track the total number of tokens (prompt + completion) used in the response
             f'openai,integration=openai,source=python,model={response.model} totalTokens={response.usage.total_tokens}',
-            
+
             # Metric to track the usage cost based on the model, prompt tokens, and completion tokens
             f'openai,integration=openai,source=python,model={response.model} usageCost={cost}',
-            
+
             # Metric to track the duration of the API request and response cycle
             f'openai,integration=openai,source=python,model={response.model} requestDuration={duration}',
         ]
