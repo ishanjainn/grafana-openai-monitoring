@@ -89,7 +89,7 @@ def __send_metrics(metrics_url, metrics_username, access_token, metrics):
         raise requests.exceptions.RequestException(f"Error sending Metrics: {err}")
 
 # Decorator function to monitor chat completion
-def chat_v2(func, metrics_url, logs_url, metrics_username, logs_username, access_token): # pylint: disable=Need 6 arguments
+def chat_v2(func, metrics_url, logs_url, metrics_username, logs_username, access_token): # pylint: disable=too-many-arguments
     """
     A decorator function to monitor chat completions using the OpenAI API.
 
