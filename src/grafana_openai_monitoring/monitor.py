@@ -3,7 +3,8 @@ grafana-openai-monitoring
 -----------
 
 This module provides functions for monitoring chat completions using the OpenAI API.
-It facilitates sending metrics and logs to Grafana Cloud, allowing you to track and analyze API usage and responses.
+It facilitates sending metrics and logs to Grafana Cloud, enabling you to track and analyze
+API usage and responses.
 """
 
 import time
@@ -86,37 +87,29 @@ def __send_metrics(metrics_url, metrics_username, access_token, metrics):
         raise requests.exceptions.RequestException(f"Error sending Metrics: {err}")
 
 # Decorator function to monitor chat completion
-def chat_v2(func, *args, **kwargs):
+def chat_v2(func, metrics_url, logs_url, metrics_username, logs_username, access_token):
     """
     A decorator function to monitor chat completions using the OpenAI API.
-    
-    This decorator wraps an OpenAI API function and adds monitoring capabilities
-    by sending metrics and logs to specified endpoints.
-    
+
+    This decorator wraps an OpenAI API function and enhances it with monitoring
+    capabilities by sending metrics and logs to specified endpoints.
+
     Args:
         func (callable): The OpenAI API function to be monitored.
-        *args: Positional arguments that may include metrics_url, logs_url,
-               metrics_username, logs_username, and access_token.
-        **kwargs: Keyword arguments that may include metrics_url, logs_url,
-                 metrics_username, logs_username, and access_token.
+        metrics_url (str): The URL where Prometheus metrics will be sent.
+        logs_url (str): The URL where Loki logs will be sent.
+        metrics_username (str): The username for accessing Prometheus metrics.
+        logs_username (str): The username for accessing Loki logs.
+        access_token (str): The access token required for authentication.
 
     Returns:
         callable: The decorated function that monitors the API call and sends metrics/logs.
 
     Note:
-        This decorator supports providing configuration parameters either as positional
+        This decorator allows you to provide configuration parameters either as positional
         arguments or as keyword arguments. If using positional arguments, make sure to
         provide at least five arguments in the order specified above.
     """
-    
-    if args and len(args) >= 5:
-        metrics_url, logs_url, metrics_username, logs_username, access_token = args[:5]
-    else:
-        metrics_url = kwargs.get('metrics_url')
-        logs_url = kwargs.get('logs_url')
-        metrics_username = kwargs.get('metrics_username')
-        logs_username = kwargs.get('logs_username')
-        access_token = kwargs.get('access_token')
 
     metrics_url, logs_url = __check(metrics_url,
                                     logs_url,
