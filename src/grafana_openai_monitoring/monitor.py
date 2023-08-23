@@ -67,7 +67,11 @@ def __send_logs(logs_url, logs_username, access_token, logs):
 def __send_metrics(metrics_url, metrics_username, access_token, metrics):
     try:
         body = '\n'.join(metrics)
-        response = requests.post(metrics_url, headers={'Content-Type': 'text/plain'}, data=str(body), auth=(metrics_username, access_token))
+        response = requests.post(metrics_url,
+                                 headers={'Content-Type': 'text/plain'},
+                                 data=str(body),
+                                 auth=(metrics_username, access_token)
+                            )
         response.raise_for_status()  # Raise an exception for non-2xx status codes
         return response
     except requests.exceptions.RequestException as err:
@@ -75,7 +79,12 @@ def __send_metrics(metrics_url, metrics_username, access_token, metrics):
 
 # Decorator function to monitor chat completion
 def chat_v2(func, metrics_url, logs_url, metrics_username, logs_username, access_token):
-    metrics_url, logs_url = __check(metrics_url, logs_url, metrics_username, logs_username, access_token)
+    metrics_url, logs_url = __check(metrics_url,
+                                    logs_url,
+                                    metrics_username,
+                                    logs_username,
+                                    access_token
+                            )
 
     def wrapper(*args, **kwargs):
         start_time = time.time()
@@ -88,7 +97,10 @@ def chat_v2(func, metrics_url, logs_url, metrics_username, logs_username, access
         model = args[2] if len(args) > 2 and isinstance(args[2], str) else kwargs.get('model', "No model provided")
 
         # Calculate the cost based on the response's usage
-        cost = __calculate_cost(model, response.usage.prompt_tokens, response.usage.completion_tokens)
+        cost = __calculate_cost(model,
+                                response.usage.prompt_tokens,
+                                response.usage.completion_tokens
+                )
 
         # Prepare logs to be sent
         logs = {
@@ -104,34 +116,57 @@ def chat_v2(func, metrics_url, logs_url, metrics_username, logs_username, access
                         "completion_tokens": str(response.usage.completion_tokens), 
                         "total_tokens": str(response.usage.total_tokens)
                     },
-                    "values": [[str(int(time.time()) * 1000000000), response["choices"][0]['message']["content"]]]
+                    "values": [
+                        [
+                            str(int(time.time()) * 1000000000),
+                            response["choices"][0]['message']["content"]
+                        ]
+                    ]
+
                 }
             ]
         }
 
         # Send logs to the specified logs URL
-        __send_logs(logs_url=logs_url, logs_username=logs_username, access_token=access_token, logs=logs)
+        __send_logs(logs_url=logs_url, 
+                    logs_username=logs_username, 
+                    access_token=access_token, 
+                    logs=logs)
 
         # Prepare metrics to be sent
         metrics = [
             # Metric to track the number of completion tokens used in the response
-            f'openai,integration=openai,source=python,model={response.model} completionTokens={response.usage.completion_tokens}',
+            f'openai,integration=openai,'
+            f'source=python,model={response.model} '
+            f'completionTokens={response.usage.completion_tokens}',
 
             # Metric to track the number of prompt tokens used in the response
-            f'openai,integration=openai,source=python,model={response.model} promptTokens={response.usage.prompt_tokens}',
+            f'openai,integration=openai,'
+            f'source=python,model={response.model} '
+            f'promptTokens={response.usage.prompt_tokens}',
 
             # Metric to track the total number of tokens (prompt + completion) used in the response
-            f'openai,integration=openai,source=python,model={response.model} totalTokens={response.usage.total_tokens}',
+            f'openai,integration=openai,'
+            f'source=python,model={response.model} '
+            f'totalTokens={response.usage.total_tokens}',
 
             # Metric to track the usage cost based on the model, prompt tokens, and completion tokens
-            f'openai,integration=openai,source=python,model={response.model} usageCost={cost}',
+            f'openai,integration=openai,'
+            f'source=python,model={response.model} '
+            f'usageCost={cost}',
 
             # Metric to track the duration of the API request and response cycle
-            f'openai,integration=openai,source=python,model={response.model} requestDuration={duration}',
+            f'openai,integration=openai,'
+            f'source=python,model={response.model} '
+            f'requestDuration={duration}',
         ]
 
+
         # Send metrics to the specified metrics URL
-        __send_metrics(metrics_url=metrics_url, metrics_username=metrics_username, access_token=access_token, metrics=metrics)
+        __send_metrics(metrics_url=metrics_url,
+                       metrics_username=metrics_username,
+                       access_token=access_token,
+                       metrics=metrics)
 
         return response
 
