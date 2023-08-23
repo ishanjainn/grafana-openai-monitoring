@@ -5,7 +5,9 @@ import time
 def __check(metrics_url, logs_url, metrics_username, logs_username, access_token):
     # Check if all required parameters are provided
     if not all([metrics_url, logs_url, metrics_username, logs_username, access_token]):
-        raise ValueError("All parameters (metrics_url, logs_url, metrics_username, logs_username, access_token) must be provided")
+        raise ValueError("All parameters (metrics_url, logs_url, metrics_username, "
+                         "logs_username, access_token) must be provided")
+
 
     # Check if 'api/prom' is present in the metrics URL
     if "api/prom" not in metrics_url:
