@@ -93,8 +93,15 @@ def chat_v2(func, metrics_url, logs_url, metrics_username, logs_username, access
         duration = end_time - start_time
 
         # Determine prompt and model from args or kwargs
-        prompt = args[1] if args and len(args) > 1 and isinstance(args[1], str) else kwargs.get('messages', [{"content": "No prompt provided"}])[0]['content']
-        model = args[2] if len(args) > 2 and isinstance(args[2], str) else kwargs.get('model', "No model provided")
+        prompt = (
+            args[1] if args and len(args) > 1 and isinstance(args[1], str)
+            else kwargs.get('messages', [{"content": "No prompt provided"}])[0]['content']
+        )
+
+        model = (
+            args[2] if len(args) > 2 and isinstance(args[2], str)
+            else kwargs.get('model', "No model provided")
+        )
 
         # Calculate the cost based on the response's usage
         cost = __calculate_cost(model,
@@ -128,10 +135,11 @@ def chat_v2(func, metrics_url, logs_url, metrics_username, logs_username, access
         }
 
         # Send logs to the specified logs URL
-        __send_logs(logs_url=logs_url, 
-                    logs_username=logs_username, 
-                    access_token=access_token, 
-                    logs=logs)
+        __send_logs(logs_url=logs_url,
+                    logs_username=logs_username,
+                    access_token=access_token,
+                    logs=logs
+        )
 
         # Prepare metrics to be sent
         metrics = [
@@ -145,12 +153,12 @@ def chat_v2(func, metrics_url, logs_url, metrics_username, logs_username, access
             f'source=python,model={response.model} '
             f'promptTokens={response.usage.prompt_tokens}',
 
-            # Metric to track the total number of tokens (prompt + completion) used in the response
+            # Metric to track the total number of tokens used in the response
             f'openai,integration=openai,'
             f'source=python,model={response.model} '
             f'totalTokens={response.usage.total_tokens}',
 
-            # Metric to track the usage cost based on the model, prompt tokens, and completion tokens
+            # Metric to track the usage cost based on the model and token usage
             f'openai,integration=openai,'
             f'source=python,model={response.model} '
             f'usageCost={cost}',
