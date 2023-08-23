@@ -65,7 +65,8 @@ def __send_logs(logs_url, logs_username, access_token, logs):
         response = requests.post(logs_url,
                                  auth=(logs_username, access_token),
                                  json=logs,
-                                 headers={"Content-Type": "application/json"}
+                                 headers={"Content-Type": "application/json"},
+                                 timeout=60
                                 )
         response.raise_for_status()  # Raise an exception for non-2xx status codes
         return response
@@ -79,7 +80,8 @@ def __send_metrics(metrics_url, metrics_username, access_token, metrics):
         response = requests.post(metrics_url,
                                  headers={'Content-Type': 'text/plain'},
                                  data=str(body),
-                                 auth=(metrics_username, access_token)
+                                 auth=(metrics_username, access_token),
+                                 timeout=60
                             )
         response.raise_for_status()  # Raise an exception for non-2xx status codes
         return response
