@@ -37,11 +37,11 @@ print(response)
 To use the grafana-openai-monitoring library effectively, you need to provide the following information:
 
 - **YOUR_OPENAI_API_KEY**: Replace this with your actual OpenAI API key.
-- **YOUR_PROMETHEUS_METRICS_URL**: Replace with the URL where you want to send Prometheus metrics.
+- **YOUR_PROMETHEUS_METRICS_URL**: Replace with the URL with your Prometheus URL.
 - **YOUR_LOKI_LOGS_URL**: Replace with the URL where you want to send Loki logs.
-- **YOUR_METRICS_USERNAME**: Replace with the username for accessing Prometheus metrics.
-- **YOUR_LOGS_USERNAME**: Replace with the username for accessing Loki logs.
-- **YOUR_ACCESS_TOKEN**: Replace with the access token required for authentication.
+- **YOUR_METRICS_USERNAME**: Replace with the username for Prometheus.
+- **YOUR_LOGS_USERNAME**: Replace with the username for Loki.
+- **YOUR_ACCESS_TOKEN**: Replace with the [Cloud Access Policy token](https://grafana.com/docs/grafana-cloud/account-management/authentication-and-permissions/access-policies/) required for authentication.
 
 After configuring the parameters, the monitored API function will automatically log and track the requests and responses to the specified endpoints.
 
