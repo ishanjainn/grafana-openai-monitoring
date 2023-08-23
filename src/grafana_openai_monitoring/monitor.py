@@ -1,5 +1,5 @@
-import requests
 import time
+import requests
 
 # Function to check if all required arguments are provided and modify metrics and logs URLs
 def __check(metrics_url, logs_url, metrics_username, logs_username, access_token):
@@ -12,7 +12,7 @@ def __check(metrics_url, logs_url, metrics_username, logs_username, access_token
     # Check if 'api/prom' is present in the metrics URL
     if "api/prom" not in metrics_url:
         raise ValueError("Invalid metrics URL format. It should contain 'api/prom' in the URL.")
-  
+
     # Convert metrics_url to use the influx line protocol url
     if "prometheus" in metrics_url:
         metrics_url = metrics_url.replace("prometheus", "influx")
@@ -23,7 +23,10 @@ def __check(metrics_url, logs_url, metrics_username, logs_username, access_token
             metrics_url = metrics_url.replace("-us-central1", "-prod-06-prod-us-central-0")
 
     # Return metrics_url and logs_url without the trailing slash
-    return metrics_url[:-1] if metrics_url.endswith('/') else metrics_url, logs_url[:-1] if logs_url.endswith('/') else logs_url
+    return (
+        metrics_url[:-1] if metrics_url.endswith('/') else metrics_url,
+        logs_url[:-1] if logs_url.endswith('/') else logs_url
+    )
 
 
 # Function to calculate the cost based on the model, prompt tokens, and sampled tokens
@@ -50,7 +53,11 @@ def __calculate_cost(model, prompt_tokens, sampled_tokens):
 # Function to send logs to the specified logs URL
 def __send_logs(logs_url, logs_username, access_token, logs):
     try:
-        response = requests.post(logs_url, auth=(logs_username, access_token), json=logs, headers={"Content-Type": "application/json"})
+        response = requests.post(logs_url, 
+                                 auth=(logs_username, access_token), 
+                                 json=logs, 
+                                 headers={"Content-Type": "application/json"}
+                                )
         response.raise_for_status()  # Raise an exception for non-2xx status codes
         return response
     except requests.exceptions.RequestException as err:
