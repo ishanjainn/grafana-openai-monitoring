@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "ishan-openai-monitoring"
+version = "0.0.8"
+description = "Library to monitor your OpenAI usage and send metrics and logs to Grafana Cloud"
+authors = ["Ishan Jain <ishan.jain@grafana.com>"]
+repository = "https://github.com/ishanjainn/openai"
+readme = "README.md"
+homepage = "https://github.com/ishanjainn/openai"
+keywords = ["observability", "monitoring", "openai", "grafana", "gpt"]
+
+[tool.poetry.dependencies]
+python = "^3.7.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2.1"
+
+
+[build-system]
+requires = ["poetry-core>=1.1.0"]
+build-backend = "poetry.core.masonry.api"

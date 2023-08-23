@@ -1,7 +1,7 @@
 import openai
-from grafana_openai_monitoring import monitor
+from src.ishan_openi_monitoring.monitor import monitor
 
-openai.api_key = "sk-xx"
+openai.api_key = "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"
 metrics_username = 1139457
 logs_username = 668812
 access_token = "glc_eyJvIjoiNjUyOTkyIiwibiI6InNkc2EiLCJrIjoiNGpQODlFYXYwMjExQ3RySzE5UXJIbTNnIiwibSI6eyJyIjoicHJvZC11cy1lYXN0LTAifX0="
@@ -10,8 +10,8 @@ metrics_url = "https://influx-prod-13-prod-us-east-0.grafana.net/api/v1/push/inf
 
 
 # Apply the custom decorator to the OpenAI API function
-openai.ChatCompletion.create = monitor.chat(openai.ChatCompletion.create, metrics_url, logs_url, metrics_username, logs_username, access_token)
+openai.ChatCompletion.create = monitor.chatV2(openai.ChatCompletion.create, metrics_url, logs_url, metrics_username, logs_username, access_token)
 
 # Now any call to openai.Completion.create will be automatically tracked
-response = openai.ChatCompletion.create(model="gpt-3.5-turbo", max_tokens=100, messages=[{"role": "user", "content": "Grafana is better than DataDog right?"}])
+response = openai.ChatCompletion.create(model="gpt-4", max_tokens=1000, messages=[{"role": "user", "content": "What is it so tough to reach south pole of moon?"}])
 print(response)
