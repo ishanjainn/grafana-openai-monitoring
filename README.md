@@ -1,3 +1,5 @@
+# NOTE: This has been moved to https://github.com/grafana/grafana-openai-monitoring/tree/main
+
 # OpenAI Monitoring: Monitor OpenAI API Usage with Grafana Cloud
 
 `grafana-openai-monitoring` is a Python library that provides a decorator to monitor chat completions using the OpenAI API. It facilitates sending metrics and logs to Grafana Cloud, allowing you to track and analyze OpenAI API usage and responses.
